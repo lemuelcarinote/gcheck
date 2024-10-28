@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Check if the request URL indicates a form viewed
             if (/\/viewed/.test(url)) {
                 console.log("You are viewing a pipedrive webform");
+                alert('viewed triggered');
                 pushToDataLayer('contact_us_viewed', {
                    formUrl: url
                 });
@@ -83,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Check if the request URL indicates a form interacted
             if (url.includes("/interacted")) {
                 console.log("You interacted on a pipedrive webform");
+                alert('interacted triggered');
                 pushToDataLayer('contact_us_interacted', {
                     formUrl: url
                 });
@@ -93,6 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Assuming the form submission data is in the request body
                 return response.clone().json().then(data => {
                     console.log("You submitted on a pipedrive webform");
+                    alert('formsubmitted triggered');
                     pushToDataLayer('contact_us_formsubmitted', {
                         formData: data
                     });
