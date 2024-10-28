@@ -64,6 +64,8 @@
     window.fetch = function(...args) {
         const url = args[0];
 
+        console.log("URLs: ", url);
+
         // Call the original fetch function
         return originalFetch.apply(this, args).then(response => {
             console.log("Calling original fetch function");
