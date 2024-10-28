@@ -43,37 +43,20 @@
 </head>
 <body>
 
+<div class="pipedriveWebForms" data-pd-webforms="https://webforms.pipedrive.com/f/63mr9LG6cgjg7CXHo4JkIzfgZrKzuWVzwd1QqAm9b4aOc6VJz8XvFRgrbX4mdDYzqH"><script src="https://webforms.pipedrive.com/f/loader"></script></div>
+
 <div class="pipedriveWebForms" data-pd-webforms="https://webforms.pipedrive.com/f/6iLCWNNfhyJvYlr6NCZRtivXjv87G7BHpuiLwbM01q8fVqpsMil5QomqaYakvEYVbB">
     <script src="https://webforms.pipedrive.com/f/loader"></script>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Override fetch
-    const originalFetch = window.fetch;
-    window.fetch = async function(...args) {
-        console.log('Fetch Request URL:', args[0]);
-        const response = await originalFetch(...args);
-        const clonedResponse = response.clone();
-        clonedResponse.json().then(data => {
-            console.log('Fetch Response:', data);
-        }).catch(err => {
-            console.log('Fetch Response could not be parsed as JSON:', err);
-        });
-        return response;
-    };
-
-    // Override XMLHttpRequest
-    const originalXhrOpen = XMLHttpRequest.prototype.open;
-    XMLHttpRequest.prototype.open = function(method, url) {
-        this.addEventListener('load', function() {
-            console.log('XHR Request URL:', url);
-            console.log('XHR Response:', this.responseText);
-        });
-        return originalXhrOpen.apply(this, arguments);
-    };
+    // Assuming Pipedrive provides a way to listen for form submission success
+    window.addEventListener('pipedriveFormSubmitted', function(event) {
+        console.log('Form submitted successfully:', event.detail);
+    });
 });
 </script>
-
+    
 </body>
 </html>
