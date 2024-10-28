@@ -59,6 +59,8 @@
     window.fetch = async function(...args) {
         const response = await originalFetch(...args);
 
+        console.log("response on await: ", response);
+
         // Check if the request URL matches the Pipedrive web form submission URL
         if (args[0] === "https://webforms.pipedrive.com/f/6iLCWNNfhyJvYlr6NCZRtivXjv87G7BHpuiLwbM01q8fVqpsMil5QomqaYakvEYVbB") {
             // Parse the response
