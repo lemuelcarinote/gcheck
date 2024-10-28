@@ -72,7 +72,7 @@
         // Call the original fetch function
         return originalFetch.apply(this, args).then(response => {
             // Check if the request URL indicates a form viewed
-            if (url.includes("/viewed")) {
+            if (/\/viewed/.test(url)) {
                 console.log("You are viewing a pipedrive webform");
                 pushToDataLayer('contact_us_viewed', {
                    formUrl: url
