@@ -69,22 +69,6 @@
         // Call the original fetch function
         return originalFetch.apply(this, args).then(response => {
             console.log("Calling original fetch function");
-            // Check if the request URL indicates a form viewed
-            if (url.includes("/viewed")) {
-                console.log("You are viewing a pipedrive webform");
-                pushToDataLayer('contact_us_viewed', {
-                   formUrl: url
-                });
-            }
-
-            // Check if the request URL indicates a form interacted
-            if (url.includes("/interacted")) {
-                console.log("You interacted on a pipedrive webform");
-                pushToDataLayer('contact_us_interacted', {
-                    formUrl: url
-                });
-            }
-
             // Check if the request URL indicates form submission
             if (url.includes("/f/6iLCWNNfhyJvYlr6NCZRtivXjv87G7BHpuiLwbM01q8fVqpsMil5QomqaYakvEYVbB") && response.ok) {
                 // Assuming the form submission data is in the request body
