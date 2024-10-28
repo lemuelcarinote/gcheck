@@ -50,6 +50,8 @@
 const originalFetch = window.fetch;
 window.fetch = async function(...args) {
     const response = await originalFetch(...args);
+
+    console.log('You arrived here...');
     
     // Check if the request URL ends with '/viewed'
     if (typeof args[0] === 'string' && args[0].endsWith('/viewed')) {
@@ -63,6 +65,9 @@ window.fetch = async function(...args) {
 const originalXhrOpen = XMLHttpRequest.prototype.open;
 XMLHttpRequest.prototype.open = function(method, url) {
     this.addEventListener('load', function() {
+
+        console.log('You arrived here...');
+        
         // Check if the request URL ends with '/viewed'
         if (url.endsWith('/viewed')) {
             console.log('Form viewed');
