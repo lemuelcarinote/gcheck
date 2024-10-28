@@ -52,6 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Store the original fetch function
     const originalFetch = window.fetch;
 
+    console.log('Fetch Log', originalFetch);
+
     // Override the fetch function
     window.fetch = async function(...args) {
         // Log the request URL
