@@ -66,6 +66,7 @@
         return originalFetch.apply(this, args).then(response => {
             // Check if the request URL indicates a form viewed
             if (url.includes("/viewed")) {
+                console.log("You are viewing a pipedrive webform");
                 pushToDataLayer('contact_us_viewed', {
                    formUrl: url
                 });
@@ -73,6 +74,7 @@
 
             // Check if the request URL indicates a form interacted
             if (url.includes("/interacted")) {
+                console.log("You interacted on a pipedrive webform");
                 pushToDataLayer('contact_us_interacted', {
                     formUrl: url
                 });
@@ -82,6 +84,7 @@
             if (url.includes("/f/6iLCWNNfhyJvYlr6NCZRtivXjv87G7BHpuiLwbM01q8fVqpsMil5QomqaYakvEYVbB") && response.ok) {
                 // Assuming the form submission data is in the request body
                 response.clone().json().then(data => {
+                    console.log("You submitted on a pipedrive webform");
                     pushToDataLayer('contact_us_formsubmitted', {
                         formData: data
                     });
