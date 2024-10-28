@@ -48,66 +48,38 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("script init.");
+(function() {
 
-    // Initialize dataLayer if not already defined
-    window.dataLayer = window.dataLayer || [];
-
-    // Function to push to dataLayer
-    function pushToDataLayer(eventName, additionalData = {}) {
-        console.log(eventName);
-        window.dataLayer.push({
-            event: eventName,
-            ...additionalData
-        });
-    }
-
-    // Intercept network requests
+    console.log("URLs: ", url);
+    
+    // Store the original fetch function
     const originalFetch = window.fetch;
-    window.fetch = function(...args) {
-        const url = args[0];
 
-        console.log("URLs: ", url);
+    // Override the fetch function
+    window.fetch = async function(...args) {
+        const response = await originalFetch(...args);
 
-        // Call the original fetch function
-        return originalFetch.apply(this, args).then(response => {
-            // Check if the request URL indicates a form viewed
-            if (/\/viewed/.test(url)) {
-                console.log("You are viewing a pipedrive webform");
-                alert('viewed triggered');
-                pushToDataLayer('contact_us_viewed', {
-                   formUrl: url
+        // Check if the request URL matches the Pipedrive web form submission URL
+        if (args[0] === "https://webforms.pipedrive.com/f/6iLCWNNfhyJvYlr6NCZRtivXjv87G7BHpuiLwbM01q8fVqpsMil5QomqaYakvEYVbB") {
+            // Parse the response
+            const responseData = await response.json();
+
+            console.log("Response Data: ", responseData);
+
+            // Check if the response indicates success
+            if (responseData.success && Object.keys(responseData.value).length > 0) {
+                // Push to dataLayer
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({
+                    event: 'formSubmissionSuccess',
+                    formData: responseData.value // or any other data you want to include
                 });
             }
+        }
 
-            // Check if the request URL indicates a form interacted
-            if (url.includes("/interacted")) {
-                console.log("You interacted on a pipedrive webform");
-                alert('interacted triggered');
-                pushToDataLayer('contact_us_interacted', {
-                    formUrl: url
-                });
-            }
-
-            // Check if the request URL indicates form submission
-            if (url.includes("/f/6iLCWNNfhyJvYlr6NCZRtivXjv87G7BHpuiLwbM01q8fVqpsMil5QomqaYakvEYVbB") && response.ok) {
-                // Assuming the form submission data is in the request body
-                return response.clone().json().then(data => {
-                    console.log("You submitted on a pipedrive webform");
-                    alert('formsubmitted triggered');
-                    pushToDataLayer('contact_us_formsubmitted', {
-                        formData: data
-                    });
-                }).catch(error => {
-                    console.error("Error parsing submission data:", error);
-                });
-            }
-
-            return response;
-        });
+        return response; // Return the original response
     };
-});
+})();
 </script>
 
 </body>
