@@ -51,8 +51,10 @@
         window.addEventListener('message', function(event) {
             // Check if the message is from the Pipedrive form
             if (event.origin === "https://webforms.pipedrive.com") {
+                console.log("You arrived on the first IF condition.");
                 // Check if the message indicates a successful submission
                 if (event.data && event.data.type === "formSubmissionSuccess") {
+                    console.log("You arrived on the second IF condition.");
                     window.dataLayer = window.dataLayer || [];
                     window.dataLayer.push({
                         'event': 'contact_us_submit'
