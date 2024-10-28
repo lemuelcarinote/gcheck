@@ -42,27 +42,55 @@
 </head>
 <body>
 
-<div class="pipedriveWebForms" data-pd-webforms="https://webforms.pipedrive.com/f/6iLCWNNfhyJvYlr6NCZRtivXjv87G7BHpuiLwbM01q8fVqpsMil5QomqaYakvEYVbB"><script src="https://webforms.pipedrive.com/f/loader"></script></div>
+<div class="pipedriveWebForms" data-pd-webforms="https://webforms.pipedrive.com/f/6iLCWNNfhyJvYlr6NCZRtivXjv87G7BHpuiLwbM01q8fVqpsMil5QomqaYakvEYVbB">
+    <script src="https://webforms.pipedrive.com/f/loader"></script>
+</div>
 
 <script>
-    // Wait for the Pipedrive form to load
-    window.addEventListener('load', function() {
-        // Check if Pipedrive provides a submission event
-        window.addEventListener('message', function(event) {
-            // Check if the message is from the Pipedrive form
-            if (event.origin === "https://webforms.pipedrive.com") {
-                console.log("You arrived on the first IF condition.");
-                // Check if the message indicates a successful submission
-                if (event.data && event.data.type === "formSubmissionSuccess") {
-                    console.log("You arrived on the second IF condition.");
-                    window.dataLayer = window.dataLayer || [];
-                    window.dataLayer.push({
-                        'event': 'contact_us_submit'
-                    });
-                }
+    // Function to push to dataLayer
+    function pushToDataLayer(eventName, additionalData = {}) {
+        console.log("You are within pushToDataLayer function.");
+        // window.dataLayer = window.dataLayer || [];
+        // window.dataLayer.push({
+        //     event: eventName,
+        //     ...additionalData
+        // });
+    }
+
+    // Intercept network requests
+    const originalFetch = window.fetch;
+    window.fetch = function(...args) {
+        const url = args[0];
+
+        // Call the original fetch function
+        return originalFetch.apply(this, args).then(response => {
+            // Check if the request URL indicates a form viewed
+            if (url.includes("/viewed")) {
+                pushToDataLayer('contact_us_viewed', {
+                   formUrl: url
+                });
             }
+
+            // Check if the request URL indicates a form interacted
+            if (url.includes("/interacted")) {
+                pushToDataLayer('contact_us_interacted', {
+                    formUrl: url
+                });
+            }
+
+            // Check if the request URL indicates form submission
+            if (url.includes("/f/6iLCWNNfhyJvYlr6NCZRtivXjv87G7BHpuiLwbM01q8fVqpsMil5QomqaYakvEYVbB") && response.ok) {
+                // Assuming the form submission data is in the request body
+                response.clone().json().then(data => {
+                    pushToDataLayer('contact_us_formsubmitted', {
+                        formData: data
+                    });
+                });
+            }
+
+            return response;
         });
-    });
+    };
 </script>
     
 </body>
