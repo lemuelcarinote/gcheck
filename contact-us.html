@@ -46,20 +46,30 @@
 <div class="pipedriveWebForms" data-pd-webforms="https://webforms.pipedrive.com/f/63mr9LG6cgjg7CXHo4JkIzfgZrKzuWVzwd1QqAm9b4aOc6VJz8XvFRgrbX4mdDYzqH"><script src="https://webforms.pipedrive.com/f/loader"></script></div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-
-    console.log('script initialization.');
-    // Inside the fetch override
+// Override fetch
+const originalFetch = window.fetch;
+window.fetch = async function(...args) {
     const response = await originalFetch(...args);
-    const clonedResponse = response.clone();
-    const data = await clonedResponse.json();
     
-    if (data.success) { // Adjust this condition based on the actual response structure
-        console.log('Form submitted successfully:', data);
-    } else {
-        console.log('Form submission failed:', data);
+    // Check if the request URL ends with '/viewed'
+    if (typeof args[0] === 'string' && args[0].endsWith('/viewed')) {
+        console.log('Form viewed');
     }
-});
+    
+    return response;
+};
+
+// Override XMLHttpRequest
+const originalXhrOpen = XMLHttpRequest.prototype.open;
+XMLHttpRequest.prototype.open = function(method, url) {
+    this.addEventListener('load', function() {
+        // Check if the request URL ends with '/viewed'
+        if (url.endsWith('/viewed')) {
+            console.log('Form viewed');
+        }
+    });
+    return originalXhrOpen.apply(this, arguments);
+};
 </script>
     
 </body>
