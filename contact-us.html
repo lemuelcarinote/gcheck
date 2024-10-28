@@ -44,5 +44,24 @@
 
 <div class="pipedriveWebForms" data-pd-webforms="https://webforms.pipedrive.com/f/6iLCWNNfhyJvYlr6NCZRtivXjv87G7BHpuiLwbM01q8fVqpsMil5QomqaYakvEYVbB"><script src="https://webforms.pipedrive.com/f/loader"></script></div>
 
+<script>
+    // Wait for the Pipedrive form to load
+    window.addEventListener('load', function() {
+        // Check if Pipedrive provides a submission event
+        window.addEventListener('message', function(event) {
+            // Check if the message is from the Pipedrive form
+            if (event.origin === "https://webforms.pipedrive.com") {
+                // Check if the message indicates a successful submission
+                if (event.data && event.data.type === "formSubmissionSuccess") {
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                        'event': 'contact_us_submit'
+                    });
+                }
+            }
+        });
+    });
+</script>
+    
 </body>
 </html>
