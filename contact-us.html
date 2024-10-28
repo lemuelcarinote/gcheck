@@ -47,10 +47,16 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Assuming Pipedrive provides a way to listen for form submission success
-    window.addEventListener('pipedriveFormSubmitted', function(event) {
-        console.log('Form submitted successfully:', event.detail);
-    });
+    // Inside the fetch override
+    const response = await originalFetch(...args);
+    const clonedResponse = response.clone();
+    const data = await clonedResponse.json();
+    
+    if (data.success) { // Adjust this condition based on the actual response structure
+        console.log('Form submitted successfully:', data);
+    } else {
+        console.log('Form submission failed:', data);
+    }
 });
 </script>
     
