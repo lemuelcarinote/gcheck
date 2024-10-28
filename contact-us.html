@@ -47,6 +47,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+
+    console.log('script initialization.');
     // Inside the fetch override
     const response = await originalFetch(...args);
     const clonedResponse = response.clone();
