@@ -1,81 +1,40 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Connect with GCheck</title>
-<link rel="icon" href="https://gcheck.com/wp-content/uploads/2023/12/logo-symbol.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
-<style>
-    body {
-        margin: 15px;
-    }
-
-    
-    * {
-        font-family: 'Poppins', Arial, sans-serif !important;
-    }
-
-    .wrapper {
-        display: block;
-        margin: 0 auto;
-        max-width: 480px;
-    }
-
-    .row {
-        padding: 15px 0
-    }
-
-    @media only screen and (max-width: 460px) {
-        .mob-no {
-            display: none !important;
-            overflow: hidden !important;
-            width: 0 !important;
-            height: 0 !important;
-        }
-    }
-</style>
-<meta name="robots" content="noindex, nofollow">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Pipedrive</title>
 </head>
 <body>
+    <div class="pipedriveWebForms" data-pd-webforms="https://webforms.pipedrive.com/f/63mr9LG6cgjg7CXHo4JkIzfgZrKzuWVzwd1QqAm9b4aOc6VJz8XvFRgrbX4mdDYzqH">
+        <script src="https://webforms.pipedrive.com/f/loader"></script>
+    </div>
 
-<div class="pipedriveWebForms" data-pd-webforms="https://webforms.pipedrive.com/f/63mr9LG6cgjg7CXHo4JkIzfgZrKzuWVzwd1QqAm9b4aOc6VJz8XvFRgrbX4mdDYzqH"><script src="https://webforms.pipedrive.com/f/loader"></script></div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Override fetch
+        const originalFetch = window.fetch;
+        window.fetch = async function(...args) {
+            const response = await originalFetch(...args);
+            console.log('You arrived here...'); // Check if this logs
+            if (typeof args[0] === 'string' && args[0].endsWith('/viewed')) {
+                console.log('Form viewed');
+            }
+            return response;
+        };
 
-<script>
-// Override fetch
-const originalFetch = window.fetch;
-window.fetch = async function(...args) {
-    const response = await originalFetch(...args);
-
-    console.log('You arrived here...');
-    
-    // Check if the request URL ends with '/viewed'
-    if (typeof args[0] === 'string' && args[0].endsWith('/viewed')) {
-        console.log('Form viewed');
-    }
-    
-    return response;
-};
-
-// Override XMLHttpRequest
-const originalXhrOpen = XMLHttpRequest.prototype.open;
-XMLHttpRequest.prototype.open = function(method, url) {
-    this.addEventListener('load', function() {
-
-        console.log('You arrived here...');
-        
-        // Check if the request URL ends with '/viewed'
-        if (url.endsWith('/viewed')) {
-            console.log('Form viewed');
-        }
+        // Override XMLHttpRequest
+        const originalXhrOpen = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function(method, url) {
+            this.addEventListener('load', function() {
+                console.log('You arrived here...'); // Check if this logs
+                if (url.endsWith('/viewed')) {
+                    console.log('Form viewed');
+                }
+            });
+            return originalXhrOpen.apply(this, arguments);
+        };
     });
-    return originalXhrOpen.apply(this, arguments);
-};
-</script>
-    
+    </script>
 </body>
 </html>
