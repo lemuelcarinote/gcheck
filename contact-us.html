@@ -47,32 +47,34 @@
     <script src="https://webforms.pipedrive.com/f/loader"></script>
 </div>
 
+<div class="pipedriveWebForms" data-pd-webforms="https://webforms.pipedrive.com/f/6iLCWNNfhyJvYlr6NCZRtivXjv87G7BHpuiLwbM01q8fVqpsMil5QomqaYakvEYVbB">
+    <script src="https://webforms.pipedrive.com/f/loader"></script>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Store the original fetch function
+    // Override fetch
     const originalFetch = window.fetch;
-
-    console.log('Fetch Log', originalFetch);
-
-    // Override the fetch function
     window.fetch = async function(...args) {
-        // Log the request URL
-        console.log('Request URL:', args[0]);
-        
-        // Call the original fetch function
+        console.log('Fetch Request URL:', args[0]);
         const response = await originalFetch(...args);
-
-        // Clone the response to read it
         const clonedResponse = response.clone();
-
-        // Log the response
         clonedResponse.json().then(data => {
-            console.log('Response:', data);
+            console.log('Fetch Response:', data);
         }).catch(err => {
-            console.log('Response could not be parsed as JSON:', err);
+            console.log('Fetch Response could not be parsed as JSON:', err);
         });
+        return response;
+    };
 
-        return response; // Return the original response
+    // Override XMLHttpRequest
+    const originalXhrOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function(method, url) {
+        this.addEventListener('load', function() {
+            console.log('XHR Request URL:', url);
+            console.log('XHR Response:', this.responseText);
+        });
+        return originalXhrOpen.apply(this, arguments);
     };
 });
 </script>
