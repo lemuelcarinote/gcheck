@@ -48,40 +48,31 @@
 </div>
 
 <script>
-(function() {
-
-    console.log("URLs: ", url);
-    
+document.addEventListener('DOMContentLoaded', function() {
     // Store the original fetch function
     const originalFetch = window.fetch;
 
     // Override the fetch function
     window.fetch = async function(...args) {
+        // Log the request URL
+        console.log('Request URL:', args[0]);
+        
+        // Call the original fetch function
         const response = await originalFetch(...args);
 
-        console.log("response on await: ", response);
+        // Clone the response to read it
+        const clonedResponse = response.clone();
 
-        // Check if the request URL matches the Pipedrive web form submission URL
-        if (args[0] === "https://webforms.pipedrive.com/f/6iLCWNNfhyJvYlr6NCZRtivXjv87G7BHpuiLwbM01q8fVqpsMil5QomqaYakvEYVbB") {
-            // Parse the response
-            const responseData = await response.json();
-
-            console.log("Response Data: ", responseData);
-
-            // Check if the response indicates success
-            if (responseData.success && Object.keys(responseData.value).length > 0) {
-                // Push to dataLayer
-                window.dataLayer = window.dataLayer || [];
-                window.dataLayer.push({
-                    event: 'formSubmissionSuccess',
-                    formData: responseData.value // or any other data you want to include
-                });
-            }
-        }
+        // Log the response
+        clonedResponse.json().then(data => {
+            console.log('Response:', data);
+        }).catch(err => {
+            console.log('Response could not be parsed as JSON:', err);
+        });
 
         return response; // Return the original response
     };
-})();
+});
 </script>
 
 </body>
